@@ -1,53 +1,95 @@
-#include <iostream>
+#include<iostream>
+#include<string.h>
 using namespace std;
+#define MAX 50
 
-class stack{
-	char a[20],b[20];
-	int top,cnt;
+class StClass
+{
+
+	struct stknode
+	{
+		char stack[MAX];
+		int top;
+	}st;
+
 public:
-	void accept(){
-		cout<<"\nHow many Characters are you going to Enter?";
-		cin >>  cnt;
-		cout<<"\nEnter Expression:";
-		for(int i=0;i<cnt;i++){
-			cin>>a[i];
-		}
+	StClass()
+	{
+		st.top=-1;
 	}
-
-	void display(){
-		cout<<"\nEnter Expression:";
-		for(int i=0;i<cnt;i++){
-					cout<<a[i];
-				}
-	}
-
-	int isempty(){
-		if(top == -1)
-			return 1;
-		else return 0;
-	}
-	void push(){
-
-			if(isempty()==1){
-				for(int i=0;i<20;i++){
-			    if(b[i]== '(' || b[i]== '[' || b[i]== '{' )
-			     a[i]=b[i];
-                }
-			}
-}
-void pop(){
-		for(int i=0;i<cnt;i++){
-			 if(b[i]== ')' || b[i]== ']' || b[i]== '}' )
-
-
-		}
-	}
+	void push(char);
+	char pop();
+	int check(char exp[MAX]);
+	 int match(char a, char b);
 };
 
-int main(){
+int StClass:: check(char exp[])
+{
+	int i;
+	char temp;
+	int n= strlen(exp);
+	for(i=0;i<n;i++)
+	{
+		if(exp[i]=='(' || exp[i]=='{' || exp[i]=='[')
+		push(exp[i]);
+		if(exp[i]==')' || exp[i]=='}' || exp[i]==']')
+		if(st.top==-1)
+		return 0;
+		else
+		{
+			temp=pop();
+			if(!match(temp,exp[i]))
+			return 0;
+		}
+	}
+	if(st.top==-1)
+	return 1;
+	else
+	return 0;
+}
 
-	stack s;
-	s.accept();
-	s.display();
+int StClass::match(char a, char b)
+{
+	if(a=='[' && b==']')
+	return 1;
+	if(a=='{' && b=='}')
+	return 1;
+	if(a=='(' && b==')')
+	return 1;
+	return 0;
+}
+
+void StClass::push(char item)
+{
+	if(st.top==(MAX-1))
+	{
+		cout<<"Stack Overflow \n";
+		return;
+	}
+	st.top=st.top+1;
+	st.stack[st.top]=item;
+}
+
+char StClass::pop()
+{
+	if(st.top==-1)
+	{
+		cout<<"stack Underflow \n";
+	}
+	return(st.stack[st.top--]);
+}
+
+int main()
+{
+	char exp[MAX];
+	int status;
+	StClass obj;
+	cout<<"Enter a parenthesized expression: ";
+	cin>>exp;
+	status= obj.check(exp);
+	if(status==1)
+		cout<<"The expression is well paranthesized \n";
+	else
+		cout<<"The expression is not well paranthesized \n";
 	return 0;
 }
